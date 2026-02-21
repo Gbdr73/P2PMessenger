@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">P2PMessenger</string>
+    <string name="user_name">User Name</string>
+    <string name="user_password">Password</string>
+</resources>
