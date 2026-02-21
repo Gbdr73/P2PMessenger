@@ -2,4 +2,6 @@
     <string name="app_name">P2PMessenger</string>
     <string name="user_name">User Name</string>
     <string name="user_password">Password</string>
+    <string name="register">Register</string>
+    <string name="empty_field">The field \"%s\" is empty.</string>
 </resources>

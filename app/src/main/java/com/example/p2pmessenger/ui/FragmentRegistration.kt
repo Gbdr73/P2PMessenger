@@ -1,4 +1,4 @@
-package com.example.p2pmessenger
+package com.example.p2pmessenger.ui
 
 import android.os.Bundle
 import android.text.Editable
@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.p2pmessenger.R
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.p2pmessenger.databinding.FragmentRegistrationBinding
 
@@ -17,7 +18,7 @@ class FragmentRegistration : Fragment() {
     private val binding: FragmentRegistrationBinding
         get() = _binding ?: throw RuntimeException("FragmentNameBinding == null")
 
-//    private val viewModel: UserViewModel by viewModels()
+   private val viewModel: RegistrationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,11 +26,11 @@ class FragmentRegistration : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        observeViewModel()
-//        addTextChangedListeners()
-//        binding.buttonNext.setOnClickListener {
-//            viewModel.validateData()
-//        }
+        observeViewModel()
+        addTextChangedListeners()
+        binding.buttonNext.setOnClickListener {
+            viewModel.validateData()
+        }
     }
 
     override fun onCreateView(
@@ -44,7 +45,7 @@ class FragmentRegistration : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-/*
+
     fun observeViewModel() {
         viewModel.errorEmptyName.observe(viewLifecycleOwner) {
             with(binding) {
@@ -59,62 +60,29 @@ class FragmentRegistration : Fragment() {
             }
         }
 
-        viewModel.errorEmptySurname.observe(viewLifecycleOwner) {
+        viewModel.errorEmptyPassword.observe(viewLifecycleOwner) {
             with(binding) {
                 if (it) {
-                    editTextSurname.error = String.format(
+                    editTextPassword.error = String.format(
                         resources.getString(R.string.empty_field),
-                        textInputSurname.hint.toString()
+                        textInputPassword.hint.toString()
                     )
                 } else {
-                    editTextSurname.error = null
-                }
-            }
-        }
-
-        viewModel.errorEmptyBirthday.observe(viewLifecycleOwner) {
-            with(binding) {
-                if (it) {
-                    editTextBirthday.error = String.format(
-                        resources.getString(R.string.empty_field),
-                        textInputBirthday.hint.toString()
-                    )
-                } else {
-                    editTextBirthday.error = null
-                }
-            }
-        }
-
-        viewModel.errorAge.observe(viewLifecycleOwner) {
-            with(binding) {
-                if (it) {
-                    editTextBirthday.error = resources.getString(R.string.invalid_age)
-                } else {
-                    editTextBirthday.error = null
-                }
-            }
-        }
-
-        viewModel.errorBirthday.observe(viewLifecycleOwner) {
-            with(binding) {
-                if (it) {
-                    editTextBirthday.error = resources.getString(R.string.invalid_birthday)
-                } else {
-                    editTextBirthday.error = null
+                    editTextPassword.error = null
                 }
             }
         }
 
         viewModel.canContinue.observe(viewLifecycleOwner) {
-            if (it) {
+/*            if (it) {
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.mainContainer, FragmentAddress.newInstance())
                     .commit()
-            }
+            }*/
         }
     }
-*/
-/*    private fun addTextChangedListeners() {
+
+    private fun addTextChangedListeners() {
         with(binding) {
             editTextName.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
@@ -138,7 +106,7 @@ class FragmentRegistration : Fragment() {
                 }
             })
 
-            editTextSurname.addTextChangedListener(object : TextWatcher {
+            editTextPassword.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence?,
                     start: Int,
@@ -153,34 +121,12 @@ class FragmentRegistration : Fragment() {
                     before: Int,
                     count: Int
                 ) {
-                    viewModel.setSurname(editTextSurname.text.toString())
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                }
-            })
-
-            editTextBirthday.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
-
-                override fun onTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    before: Int,
-                    count: Int
-                ) {
-                    viewModel.setBirthday(editTextBirthday.text.toString())
+                    viewModel.setPassword(editTextPassword.text.toString())
                 }
 
                 override fun afterTextChanged(s: Editable?) {
                 }
             })
         }
-    }*/
+    }
 }

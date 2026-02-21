@@ -9,5 +9,5 @@
         android:id="@+id/mainContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.example.p2pmessenger.FragmentRegistration"/>
+        android:name="com.example.p2pmessenger.ui.FragmentRegistration"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
