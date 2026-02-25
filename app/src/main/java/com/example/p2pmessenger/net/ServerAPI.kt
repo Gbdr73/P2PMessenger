@@ -11,9 +11,13 @@ import io.ktor.utils.io.writeByteArray
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 
+data class ServerApiResult(val result: Int,
+    val answer: String
+)
+
 class ServerAPI() {
-    private var _result = MutableLiveData<Int>()
-    val result: LiveData<Int>
+    private var _result = MutableLiveData<ServerApiResult>()
+    val result: LiveData<ServerApiResult>
         get() = _result
 
     companion object {
@@ -48,14 +52,64 @@ class ServerAPI() {
         {
         }
 
-        delay(2000)
+        if( answer == null )
+        {
+            _result.postValue(ServerApiResult(ServerUnreachable, ""))
+        }
+        else {
+            _result.postValue(ServerApiResult(answer.toInt(), "") )
+        }
+    }
+
+    suspend fun getUserIp(name: String, password: String, requestedName: String) {
+        val selectorManager = SelectorManager(Dispatchers.IO)
+        val socket = aSocket(selectorManager).tcp().connect("192.168.1.3", 5080)
+        var nameLen = name.length.toString()
+        var reqNameLen = requestedName.length.toString()
+        var ip: String = ""
+
+        if(nameLen.length == 1)
+        {
+            nameLen = "0" + nameLen
+        }
+        if(reqNameLen.length == 1)
+        {
+            reqNameLen = "0" + reqNameLen
+        }
+        val request: String = "gip" + nameLen + name + password + reqNameLen + requestedName
+        var answer: String? = null
+
+        val receiveChannel = socket.openReadChannel()
+        val sendChannel = socket.openWriteChannel(autoFlush = true)
+
+        try {
+            sendChannel.writeByteArray(request.toByteArray(Charsets.UTF_8))
+            answer = receiveChannel.readLine()
+            socket.close()
+        }
+        catch(e: Exception )
+        {
+        }
 
         if( answer == null )
         {
-            _result.postValue(ServerUnreachable)
+            _result.postValue(ServerApiResult(ServerUnreachable, ""))
         }
         else {
-            _result.postValue(answer.toInt() )
+            if( answer.length > 3 )
+            {
+                if( answer.take(3) == "000" )
+                {
+                    ip = answer.takeLast(answer.length - 3)
+                    answer = "000"
+                }
+                else
+                {
+                    answer = answer.take(3)
+                    +3
+                }
+            }
+            _result.postValue(ServerApiResult(answer.toInt(), ip) )
         }
     }
 }

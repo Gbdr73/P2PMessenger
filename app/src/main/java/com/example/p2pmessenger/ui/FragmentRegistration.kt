@@ -23,7 +23,7 @@ class FragmentRegistration : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentNameBinding == null")
 
     private lateinit var context: Context
-   private val viewModel: RegistrationViewModel by viewModels()
+    private val viewModel: RegistrationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,21 +38,8 @@ class FragmentRegistration : Fragment() {
             binding.indicator.show()
             viewModel.validateData(viewLifecycleOwner)
         }
-        if( viewModel.isUserRegistered() )
-        {
-            val builder = AlertDialog.Builder(context)
-            builder.apply {
-                setTitle("Registration success!")
-                setMessage("User already registered!")
-                setPositiveButton("Next", object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        p0?.cancel()
-                        binding.indicator.hide()
-                    }
-                })
-                create()
-                show()
-            }
+        if (viewModel.isUserRegistered()) {
+            openDialogs()
         }
     }
 
@@ -70,11 +57,17 @@ class FragmentRegistration : Fragment() {
         viewModel.setContext(context)
         viewModel.loadUser()
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
+    private fun openDialogs() {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.mainContainer, FragmentDialogs.newInstance())
+            .commit()
+    }
     fun observeViewModel() {
         viewModel.errorEmptyName.observe(viewLifecycleOwner) {
             with(binding) {
@@ -128,21 +121,7 @@ class FragmentRegistration : Fragment() {
         viewModel.canContinue.observe(viewLifecycleOwner) {
             if (it) {
                 binding.indicator.hide()
-                val builder = AlertDialog.Builder(context)
-                builder.apply {
-                    setTitle("Registration success!")
-                    setMessage("Registration successfully completed!")
-                    setPositiveButton("Next", object : DialogInterface.OnClickListener {
-                        override fun onClick(p0: DialogInterface?, p1: Int) {
-                            p0?.cancel()
-                        }
-                    })
-                    create()
-                    show()
-                }
-/*                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.mainContainer, FragmentAddress.newInstance())
-                    .commit()*/
+                openDialogs()
             }
         }
     }

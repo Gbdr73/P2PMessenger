@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.p2pmessenger.net.ServerAPI
+import com.example.p2pmessenger.net.ServerApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import java.security.MessageDigest
@@ -59,8 +60,8 @@ class RegistrationViewModel @Inject constructor(): ViewModel() {
         if( !lifecycleOwner ) {
             lifecycleOwner = true
             serverApi.result.observe(owner) {
-                    val res: Int = it
-                    when (res) {
+                    val res: ServerApiResult = it
+                    when (res.result) {
                         ServerAPI.Success -> {
                             saveUser()
                             _canContinue.value = true
