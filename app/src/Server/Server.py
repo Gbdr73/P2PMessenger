@@ -207,7 +207,7 @@ def do_get_ip(data_in : bytes) -> bytes:
                             log("User not found")
                             data_out = CODE_NAME_ABSENT
                         else:
-                            address = find_res.at[1, IP_COLUMN]
+                            address = find_res.at[0, IP_COLUMN]
                             data_out = CODE_REQ_OK + address.encode('utf-8')
 
     return data_out
